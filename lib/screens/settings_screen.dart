@@ -66,24 +66,40 @@ class SettingsScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  RadioGroup<ThemeMode>(
-                    groupValue: appState.themeMode,
-                    onChanged: (mode) {
-                      if (mode != null) appState.setThemeMode(mode);
-                    },
-                    child: Column(
-                      children: [
-                        RadioListTile<ThemeMode>(
-                          title: const Text('System Default'),
-                          value: ThemeMode.system,
-                        ),
-                        RadioListTile<ThemeMode>(
-                          title: const Text('Light'),
-                          value: ThemeMode.light,
-                        ),
-                        RadioListTile<ThemeMode>(
-                          title: const Text('Dark'),
-                          value: ThemeMode.dark,
+                RadioGroup<ThemeMode>(
+  groupValue: appState.themeMode,
+  onChanged: (mode) {
+    if (mode != null) appState.setThemeMode(mode);
+  },
+  child: Column(
+    children: [
+      RadioListTile<ThemeMode>(
+        title: const Text('System Default'),
+        value: ThemeMode.system,
+        groupValue: appState.themeMode,   // اضافه شد
+        onChanged: (mode) {
+          if (mode != null) appState.setThemeMode(mode);
+        },
+      ),
+      RadioListTile<ThemeMode>(
+        title: const Text('Light'),
+        value: ThemeMode.light,
+        groupValue: appState.themeMode,   // اضافه شد
+        onChanged: (mode) {
+          if (mode != null) appState.setThemeMode(mode);
+        },
+      ),
+      RadioListTile<ThemeMode>(
+        title: const Text('Dark'),
+        value: ThemeMode.dark,
+        groupValue: appState.themeMode,   // اضافه شد
+        onChanged: (mode) {
+          if (mode != null) appState.setThemeMode(mode);
+        },
+      ),
+    ],
+  ),
+),
                         ),
                       ],
                     ),
