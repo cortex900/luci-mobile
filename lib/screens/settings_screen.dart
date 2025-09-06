@@ -59,47 +59,51 @@ class SettingsScreen extends ConsumerWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 28, 16, 8),
-                    child: Text(
-                      'Theme',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                RadioGroup<ThemeMode>(
-  groupValue: appState.themeMode,
-  onChanged: (mode) {
-    if (mode != null) appState.setThemeMode(mode);
-  },
-  child: Column(
-    children: [
-      RadioListTile<ThemeMode>(
-        title: const Text('System Default'),
-        value: ThemeMode.system,
-        groupValue: appState.themeMode,   // اضافه شد
-        onChanged: (mode) {
-          if (mode != null) appState.setThemeMode(mode);
-        },
-      ),
-      RadioListTile<ThemeMode>(
-        title: const Text('Light'),
-        value: ThemeMode.light,
-        groupValue: appState.themeMode,   // اضافه شد
-        onChanged: (mode) {
-          if (mode != null) appState.setThemeMode(mode);
-        },
-      ),
-      RadioListTile<ThemeMode>(
-        title: const Text('Dark'),
-        value: ThemeMode.dark,
-        groupValue: appState.themeMode,   // اضافه شد
-        onChanged: (mode) {
-          if (mode != null) appState.setThemeMode(mode);
-        },
-      ),
-    ],
-  ),
-),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Theme',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        RadioGroup<ThemeMode>(
+                          groupValue: appState.themeMode,
+                          onChanged: (mode) {
+                            if (mode != null) appState.setThemeMode(mode);
+                          },
+                          child: Column(
+                            children: [
+                              RadioListTile<ThemeMode>(
+                                title: const Text('System Default'),
+                                value: ThemeMode.system,
+                                groupValue: appState.themeMode,
+                                onChanged: (mode) {
+                                  if (mode != null) appState.setThemeMode(mode);
+                                },
+                              ),
+                              RadioListTile<ThemeMode>(
+                                title: const Text('Light'),
+                                value: ThemeMode.light,
+                                groupValue: appState.themeMode,
+                                onChanged: (mode) {
+                                  if (mode != null) appState.setThemeMode(mode);
+                                },
+                              ),
+                              RadioListTile<ThemeMode>(
+                                title: const Text('Dark'),
+                                value: ThemeMode.dark,
+                                groupValue: appState.themeMode,
+                                onChanged: (mode) {
+                                  if (mode != null) appState.setThemeMode(mode);
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -110,12 +114,13 @@ class SettingsScreen extends ConsumerWidget {
                     child: Text(
                       'Dashboard',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                   ),
                   Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     elevation: 2,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -137,7 +142,8 @@ class SettingsScreen extends ConsumerWidget {
                         'Customize Dashboard',
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
-                      subtitle: const Text('Configure interface visibility and throughput monitoring'),
+                      subtitle: const Text(
+                          'Configure interface visibility and throughput monitoring'),
                       trailing: Icon(
                         Icons.arrow_forward_ios,
                         size: 16,
@@ -186,9 +192,8 @@ class SettingsScreen extends ConsumerWidget {
                         label: const Text('Exit Reviewer Mode'),
                         style: FilledButton.styleFrom(
                           backgroundColor: Theme.of(context).colorScheme.error,
-                          foregroundColor: Theme.of(
-                            context,
-                          ).colorScheme.onError,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.onError,
                         ),
                       ),
                     ),
