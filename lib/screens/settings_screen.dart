@@ -71,39 +71,33 @@ class SettingsScreen extends ConsumerWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                         ),
-                        RadioGroup<ThemeMode>(
-                          groupValue: appState.themeMode,
-                          onChanged: (mode) {
-                            if (mode != null) appState.setThemeMode(mode);
-                          },
-                          child: Column(
-                            children: [
-                              RadioListTile<ThemeMode>(
-                                title: const Text('System Default'),
-                                value: ThemeMode.system,
-                                groupValue: appState.themeMode,
-                                onChanged: (mode) {
-                                  if (mode != null) appState.setThemeMode(mode);
-                                },
-                              ),
-                              RadioListTile<ThemeMode>(
-                                title: const Text('Light'),
-                                value: ThemeMode.light,
-                                groupValue: appState.themeMode,
-                                onChanged: (mode) {
-                                  if (mode != null) appState.setThemeMode(mode);
-                                },
-                              ),
-                              RadioListTile<ThemeMode>(
-                                title: const Text('Dark'),
-                                value: ThemeMode.dark,
-                                groupValue: appState.themeMode,
-                                onChanged: (mode) {
-                                  if (mode != null) appState.setThemeMode(mode);
-                                },
-                              ),
-                            ],
-                          ),
+                        Column(
+                          children: [
+                            RadioListTile<ThemeMode>(
+                              title: const Text('System Default'),
+                              value: ThemeMode.system,
+                              groupValue: appState.themeMode,
+                              onChanged: (mode) {
+                                if (mode != null) appState.setThemeMode(mode);
+                              },
+                            ),
+                            RadioListTile<ThemeMode>(
+                              title: const Text('Light'),
+                              value: ThemeMode.light,
+                              groupValue: appState.themeMode,
+                              onChanged: (mode) {
+                                if (mode != null) appState.setThemeMode(mode);
+                              },
+                            ),
+                            RadioListTile<ThemeMode>(
+                              title: const Text('Dark'),
+                              value: ThemeMode.dark,
+                              groupValue: appState.themeMode,
+                              onChanged: (mode) {
+                                if (mode != null) appState.setThemeMode(mode);
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),
