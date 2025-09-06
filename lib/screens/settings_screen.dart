@@ -1,6 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:luci_mobile/main.dart';
+
+// نمونه ساده AppState برای تست
+class AppState extends ChangeNotifier {
+  bool featureAEnabled = false;
+  bool featureBEnabled = false;
+  bool notificationsEnabled = false;
+
+  void setFeatureAEnabled(bool value) {
+    featureAEnabled = value;
+    notifyListeners();
+  }
+
+  void setFeatureBEnabled(bool value) {
+    featureBEnabled = value;
+    notifyListeners();
+  }
+
+  void setNotificationsEnabled(bool value) {
+    notificationsEnabled = value;
+    notifyListeners();
+  }
+}
+
+// Provider برای AppState
+final appStateProvider = ChangeNotifierProvider<AppState>((ref) {
+  return AppState();
+});
 
 class RouterDashboardSettingsScreen extends ConsumerWidget {
   const RouterDashboardSettingsScreen({super.key});
@@ -22,7 +48,7 @@ class RouterDashboardSettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
 
-          // نمونه Switch اصلاح شده
+          // SwitchListTile ها با thumbColor اصلاح شده
           SwitchListTile(
             title: const Text('Enable Feature A'),
             value: appState.featureAEnabled,
@@ -32,13 +58,12 @@ class RouterDashboardSettingsScreen extends ConsumerWidget {
             thumbColor: MaterialStateProperty.resolveWith<Color?>(
               (states) {
                 if (states.contains(MaterialState.selected)) {
-                  return Colors.blue; // رنگ فعال
+                  return Colors.blue;
                 }
-                return null; // رنگ پیش‌فرض غیرفعال
+                return null;
               },
             ),
           ),
-
           SwitchListTile(
             title: const Text('Enable Feature B'),
             value: appState.featureBEnabled,
@@ -60,8 +85,9 @@ class RouterDashboardSettingsScreen extends ConsumerWidget {
             'Other Settings',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
+          const SizedBox(height: 16),
 
-          // نمونه یک Switch ساده داخل Row
+          // Switch ساده داخل Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -86,4 +112,16 @@ class RouterDashboardSettingsScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+// نمونه main برای تست
+void main() {
+  runApp(
+    ProviderScope(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const RouterDashboardSettingsScreen(),
+      ),
+    ),
+  );
 }
