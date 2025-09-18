@@ -22,26 +22,42 @@ jobs:
       - name: Precache iOS artifacts
         run: flutter precache --ios
 
-      - name: Build iOS IPA (unsigned)
+      - name: Build Flutter iOS archive
         run: flutter build ipa --no-codesign
 
-      - name: Collect IPA dynamically
+      - name: Export IPA from archive
         run: |
-          IPA_PATH=$(find build/ios/archive -name "*.ipa" | head -n 1)
-          if [ -z "$IPA_PATH" ]; then
-            echo "Error: IPA file not found!"
+          ARCHIVE_PATH=$(find build/ios/archive -name "*.xcarchive" | head -n 1)
+          if [ -z "$ARCHIVE_PATH" ]; then
+            echo "Error: XCARCHIVE not found!"
             exit 1
           fi
-          echo "Found IPA at $IPA_PATH"
+          echo "Found archive at $ARCHIVE_PATH"
           mkdir -p build/ipa
-          cp "$IPA_PATH" build/ipa/
+          # Export IPA using unsigned options
+          cat > ios/ExportOptions.plist <<EOL
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>development</string>
+            <key>signingStyle</key>
+            <string>manual</string>
+            <key>compileBitcode</key>
+            <false/>
+            <key>uploadSymbols</key>
+            <false/>
+          </dict>
+          </plist>
+          EOL
+          xcodebuild -exportArchive \
+            -archivePath "$ARCHIVE_PATH" \
+            -exportOptionsPlist ios/ExportOptions.plist \
+            -exportPath build/ipa
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
           name: luci-mobile-ipa
           path: build/ipa/*.ipa
-          if-no-files-found: warn
-          compression-level: 6
-          overwrite: false
-          include-hidden-files: false
