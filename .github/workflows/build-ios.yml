@@ -23,7 +23,7 @@ jobs:
         run: flutter precache --ios
 
       - name: Build iOS IPA (unsigned)
-        run: flutter build ipa --no-codesign --export-path build/ios/ipa
+        run: flutter build ipa --no-codesign --build-dir=build/ios/ipa
 
       - name: Check IPA
         run: ls -la build/ios/ipa
@@ -32,4 +32,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: luci-mobile-ipa
-          path: build/ios/ipa/*.ipa
+          path: build/ios/ipa/**/*.ipa
