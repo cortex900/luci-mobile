@@ -39,7 +39,6 @@ class _RouterDashboardSettingsScreenState
   @override
   void initState() {
     super.initState();
-    // Ensure the selected router matches the requested router
     final appState = ref.read(appStateProvider);
     final current = appState.selectedRouter?.id;
     Future(() async {
@@ -178,6 +177,7 @@ class _RouterDashboardSettingsScreenState
           ),
           child: Column(
             children: [
+              // --- اصلاح SwitchListTile ---
               SwitchListTile.adaptive(
                 title: Text(
                   'Show All Interfaces',
@@ -202,8 +202,22 @@ class _RouterDashboardSettingsScreenState
                   });
                   _onPreferenceChanged();
                 },
-                activeTrackColor: Theme.of(context).colorScheme.primary,
-                activeThumbColor: Theme.of(context).colorScheme.onPrimary,
+                thumbColor: MaterialStateProperty.resolveWith<Color?>(
+                  (states) {
+                    if (states.contains(MaterialState.selected)) {
+                      return Theme.of(context).colorScheme.onPrimary;
+                    }
+                    return null;
+                  },
+                ),
+                trackColor: MaterialStateProperty.resolveWith<Color?>(
+                  (states) {
+                    if (states.contains(MaterialState.selected)) {
+                      return Theme.of(context).colorScheme.primary;
+                    }
+                    return null;
+                  },
+                ),
               ),
             ],
           ),
@@ -221,8 +235,8 @@ class _RouterDashboardSettingsScreenState
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
                 value: iface,
-                groupValue: _preferences.primaryThroughputInterface, // ignore: deprecated_member_use
-                onChanged: (value) { // ignore: deprecated_member_use
+                groupValue: _preferences.primaryThroughputInterface,
+                onChanged: (value) {
                   setState(() {
                     _preferences = _preferences.copyWith(
                       showAllThroughput: false,
@@ -280,8 +294,22 @@ class _RouterDashboardSettingsScreenState
                   });
                   _onPreferenceChanged();
                 },
-                activeTrackColor: Theme.of(context).colorScheme.primary,
-                activeThumbColor: Theme.of(context).colorScheme.onPrimary,
+                thumbColor: MaterialStateProperty.resolveWith<Color?>(
+                  (states) {
+                    if (states.contains(MaterialState.selected)) {
+                      return Theme.of(context).colorScheme.onPrimary;
+                    }
+                    return null;
+                  },
+                ),
+                trackColor: MaterialStateProperty.resolveWith<Color?>(
+                  (states) {
+                    if (states.contains(MaterialState.selected)) {
+                      return Theme.of(context).colorScheme.primary;
+                    }
+                    return null;
+                  },
+                ),
               ),
             ],
           ),
@@ -370,8 +398,22 @@ class _RouterDashboardSettingsScreenState
                   });
                   _onPreferenceChanged();
                 },
-                activeTrackColor: Theme.of(context).colorScheme.primary,
-                activeThumbColor: Theme.of(context).colorScheme.onPrimary,
+                thumbColor: MaterialStateProperty.resolveWith<Color?>(
+                  (states) {
+                    if (states.contains(MaterialState.selected)) {
+                      return Theme.of(context).colorScheme.onPrimary;
+                    }
+                    return null;
+                  },
+                ),
+                trackColor: MaterialStateProperty.resolveWith<Color?>(
+                  (states) {
+                    if (states.contains(MaterialState.selected)) {
+                      return Theme.of(context).colorScheme.primary;
+                    }
+                    return null;
+                  },
+                ),
               ),
             ],
           ),
