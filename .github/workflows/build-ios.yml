@@ -25,12 +25,14 @@ jobs:
       - name: Build iOS IPA (unsigned)
         run: flutter build ipa --no-codesign
 
-      - name: Find IPA
+      - name: Collect all IPA files
         run: |
+          echo "Searching for all IPA files..."
           mkdir -p build/ipa
           find build/ios -name "*.ipa" -exec cp {} build/ipa/ \;
+          echo "All IPA files copied to build/ipa/"
 
-      - name: Upload IPA artifact
+      - name: Upload IPA artifacts
         uses: actions/upload-artifact@v4
         with:
           name: luci-mobile-ipa
