@@ -2,65 +2,33 @@ name: Build iOS IPA
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
-
-env:
-  FLUTTER_VERSION: "3.32.5"
 
 jobs:
   build:
     runs-on: macos-latest
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - name: Set up Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Build .ipa (unsigned)
+        run: |
+          xcodebuild -scheme "luci-mobile" \
+            -sdk iphoneos \
+            -configuration Release \
+            build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+
+      - name: Create IPA
+        run: |
+          mkdir -p Payload
+          cp -r build/Release-iphoneos/*.app Payload/
+          zip -r luci-mobile.ipa Payload
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-
-      - name: Flutter pub get
-        run: flutter pub get
-
-      - name: Precache iOS artifacts
-        run: flutter precache --ios
-
-      - name: Install CocoaPods and pods
-        run: |
-          sudo gem install cocoapods -N || true
-          pushd ios
-          pod install --repo-update || true
-          popd
-
-      - name: Decode and install certificate & provisioning (if provided)
-        if: ${{ secrets.P12_BASE64 != '' }}
-        env:
-          P12_BASE64: ${{ secrets.P12_BASE64 }}
-          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-          MOBILEPROVISION_BASE64: ${{ secrets.MOBILEPROVISION_BASE64 }}
-        run: |
-          echo "$P12_BASE64" | base64 --decode > /tmp/ios_dist.p12
-          security create-keychain -p actions ios-build.keychain
-          security import /tmp/ios_dist.p12 -k ~/Library/Keychains/ios-build.keychain -P "$P12_PASSWORD" -T /usr/bin/codesign || true
-          security list-keychains -s ~/Library/Keychains/ios-build.keychain
-          security default-keychain -s ~/Library/Keychains/ios-build.keychain
-          security unlock-keychain -p actions ~/Library/Keychains/ios-build.keychain
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "$MOBILEPROVISION_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
-
-      - name: Build (signed) — use when P12 provided
-        if: ${{ secrets.P12_BASE64 != '' }}
-        run: |
-          flutter build ipa --export-options-plist=ios/ExportOptions.plist
-
-      - name: Build (unsigned) — no signing
-        if: ${{ secrets.P12_BASE64 == '' }}
-        run: |
-          flutter build ipa --no-codesign
-
-      - name: Upload IPA artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ios-ipa
-          path: build/ios/ipa/*.ipa
+          name: luci-mobile-ipa
+          path: luci-mobile.ipa
