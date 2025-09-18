@@ -19,10 +19,13 @@ jobs:
       - name: Flutter pub get
         run: flutter pub get
 
+      - name: Analyze Flutter code
+        run: flutter analyze
+
       - name: Precache iOS artifacts
         run: flutter precache --ios
 
-      - name: Install CocoaPods
+      - name: Install CocoaPods (with mirror for Iran)
         run: |
           sudo gem install cocoapods
           pod repo update
@@ -30,14 +33,20 @@ jobs:
       - name: Install iOS Pods
         run: |
           cd ios
-          pod install --repo-update
+          # استفاده از mirror داخلی برای CocoaPods
+          pod install --repo-update --sources=https://gitee.com/mirrors/CocoaPods-Specs.git,https://cdn.cocoapods.org/ --verbose
           cd ..
 
       - name: Build iOS IPA (unsigned)
         run: flutter build ipa --no-codesign
 
-      - name: Verify IPA exists
-        run: ls -la build/ios/ipa/
+      - name: Check IPA folder
+        run: |
+          if [ ! -d "build/ios/ipa" ]; then
+            echo "IPA folder does not exist, build failed!"
+            exit 1
+          fi
+          ls -la build/ios/ipa/
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
