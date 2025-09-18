@@ -1,4 +1,4 @@
-name: Build iOS IPA
+name: Build iOS IPA (Flutter, unsigned)
 
 on:
   workflow_dispatch:
@@ -11,24 +11,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Xcode
-        run: sudo xcode-select -s /Applications/Xcode.app
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.32.5"
 
-      - name: Build .ipa (unsigned)
-        run: |
-          xcodebuild -scheme "luci-mobile" \
-            -sdk iphoneos \
-            -configuration Release \
-            build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+      - name: Flutter pub get
+        run: flutter pub get
 
-      - name: Create IPA
-        run: |
-          mkdir -p Payload
-          cp -r build/Release-iphoneos/*.app Payload/
-          zip -r luci-mobile.ipa Payload
+      - name: Precache iOS artifacts
+        run: flutter precache --ios
 
-      - name: Upload artifact
+      - name: Build iOS IPA (unsigned)
+        run: flutter build ipa --no-codesign
+
+      - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
           name: luci-mobile-ipa
-          path: luci-mobile.ipa
+          path: build/ios/ipa/*.ipa
