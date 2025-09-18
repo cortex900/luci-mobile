@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Xcode
         run: sudo xcode-select -s /Applications/Xcode.app
@@ -28,7 +28,7 @@ jobs:
           zip -r luci-mobile.ipa Payload
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: luci-mobile-ipa
           path: luci-mobile.ipa
