@@ -54,6 +54,8 @@ class SettingsScreen extends ConsumerWidget {
           Builder(
             builder: (context) {
               final appState = ref.watch(appStateProvider);
+              ThemeMode selectedTheme = appState.themeMode;
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -66,28 +68,33 @@ class SettingsScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  RadioGroup<ThemeMode>(
-                    groupValue: appState.themeMode,
+
+                  // --- اصلاح شده: RadioListTile ساده بدون RadioGroup ---
+                  RadioListTile<ThemeMode>(
+                    title: const Text('System Default'),
+                    value: ThemeMode.system,
+                    groupValue: selectedTheme,
                     onChanged: (mode) {
                       if (mode != null) appState.setThemeMode(mode);
                     },
-                    child: Column(
-                      children: [
-                        RadioListTile<ThemeMode>(
-                          title: const Text('System Default'),
-                          value: ThemeMode.system,
-                        ),
-                        RadioListTile<ThemeMode>(
-                          title: const Text('Light'),
-                          value: ThemeMode.light,
-                        ),
-                        RadioListTile<ThemeMode>(
-                          title: const Text('Dark'),
-                          value: ThemeMode.dark,
-                        ),
-                      ],
-                    ),
                   ),
+                  RadioListTile<ThemeMode>(
+                    title: const Text('Light'),
+                    value: ThemeMode.light,
+                    groupValue: selectedTheme,
+                    onChanged: (mode) {
+                      if (mode != null) appState.setThemeMode(mode);
+                    },
+                  ),
+                  RadioListTile<ThemeMode>(
+                    title: const Text('Dark'),
+                    value: ThemeMode.dark,
+                    groupValue: selectedTheme,
+                    onChanged: (mode) {
+                      if (mode != null) appState.setThemeMode(mode);
+                    },
+                  ),
+
                   const Divider(height: 32),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
