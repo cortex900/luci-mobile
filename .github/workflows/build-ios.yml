@@ -1,4 +1,4 @@
-name: Build iOS IPA (Flutter, unsigned)
+name: Build iOS Archive (Flutter, unsigned)
 
 on:
   workflow_dispatch:
@@ -22,42 +22,14 @@ jobs:
       - name: Precache iOS artifacts
         run: flutter precache --ios
 
-      - name: Build Flutter iOS archive
+      - name: Build iOS archive (unsigned)
         run: flutter build ipa --no-codesign
 
-      - name: Export IPA from archive
-        run: |
-          ARCHIVE_PATH=$(find build/ios/archive -name "*.xcarchive" | head -n 1)
-          if [ -z "$ARCHIVE_PATH" ]; then
-            echo "Error: XCARCHIVE not found!"
-            exit 1
-          fi
-          echo "Found archive at $ARCHIVE_PATH"
-          mkdir -p build/ipa
-          # Export IPA using unsigned options
-          cat > ios/ExportOptions.plist <<EOL
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key>
-            <string>development</string>
-            <key>signingStyle</key>
-            <string>manual</string>
-            <key>compileBitcode</key>
-            <false/>
-            <key>uploadSymbols</key>
-            <false/>
-          </dict>
-          </plist>
-          EOL
-          xcodebuild -exportArchive \
-            -archivePath "$ARCHIVE_PATH" \
-            -exportOptionsPlist ios/ExportOptions.plist \
-            -exportPath build/ipa
+      - name: List archive folder
+        run: ls -la build/ios/archive
 
-      - name: Upload IPA artifact
+      - name: Upload XCARCHIVE artifact
         uses: actions/upload-artifact@v4
         with:
-          name: luci-mobile-ipa
-          path: build/ipa/*.ipa
+          name: Runner-xcarchive
+          path: build/ios/archive/Runner.xcarchive
