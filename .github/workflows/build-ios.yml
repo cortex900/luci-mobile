@@ -22,8 +22,22 @@ jobs:
       - name: Precache iOS artifacts
         run: flutter precache --ios
 
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
+          pod repo update
+
+      - name: Install iOS Pods
+        run: |
+          cd ios
+          pod install --repo-update
+          cd ..
+
       - name: Build iOS IPA (unsigned)
         run: flutter build ipa --no-codesign
+
+      - name: Verify IPA exists
+        run: ls -la build/ios/ipa/
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
